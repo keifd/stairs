@@ -13,6 +13,14 @@ class Game:
         # if the player hasn't died
         self.running = True
 
+    def createTilemap(self):
+        for i, row in enumerate(tilemap):
+            for j, column in enumerate(row):
+                if column == 1:
+                    Block(self, j, i)
+                if column == 2:
+                    Player(self, j, i)
+
     def new(self):
         # if the player is still playing
         self.playing = True
@@ -26,8 +34,8 @@ class Game:
         # storing attacks
         self.attacks = pygame.sprite.LayeredUpdates()     
 
-        # create the player object
-        self.player = Player(self, 1, 2)
+        self.createTilemap()
+        
     
     def events(self):
             for event in pygame.event.get():
