@@ -18,6 +18,9 @@ class Player(pygame.sprite.Sprite):
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
+        self.x_change = 0
+        self.y_change = 0
+
         self.image = pygame.Surface([self.width, self.height])
         self.image.fill(RED)
 
@@ -27,7 +30,37 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.y
     
     def update(self):
-        pass
+        self.movement()
+        self.rect.x += self.x_change
+        self.rect.y += self.y_change
 
+        self.x_change = 0
+        self.y_change = 0
+
+    def movement(self):
+        move = pygame.math.Vector2(0, 0)
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT]:
+            move.x -= 1
+            self.facing = 'left'
+        if keys[pygame.K_RIGHT]:
+            move.x += 1
+            self.facing = 'right'
+        if keys[pygame.K_UP]:
+            move.y -= 1
+            self.facing = 'up'
+        if keys[pygame.K_DOWN]:
+            move.y += 1
+            self.facing = 'down'
+
+        # Normalize diagonal movement
+        if move.length() > 0:
+            move = move.normalize() * PLAYER_SPEED
+
+        # Apply movement to x_change and y_change
+        self.x_change = move.x
+        self.y_change = move.y
+
+            
         
-    

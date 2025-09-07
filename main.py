@@ -39,6 +39,7 @@ class Game:
     def update(self):
         self.all_sprites.update()
 
+
     def draw(self):
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
@@ -58,6 +59,7 @@ class Game:
         pass
     def intro_screen(self):
         pass
+
 
 g = Game()
 g.intro_screen()
