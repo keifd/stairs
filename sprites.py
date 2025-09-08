@@ -3,6 +3,15 @@ from config import *
 import math
 import random
 
+class Spritesheet:
+    def __init__(self, file):
+        self.sheet = pygame.image.load(file).convert()
+
+    def get_sprite(self, x, y, width, height):
+        sprite = pygame.Surface([width, height])
+        sprite.blit(self.sheet, (0,0), (x,y, width, height))
+        sprite.set_colorkey(BLACK)
+        return sprite
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -21,8 +30,9 @@ class Player(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
 
-        self.image = pygame.Surface([self.width, self.height])
-        self.image.fill(RED)
+        self.image = self.game.character_spritesheet.get_sprite(4*32, 2*32, self.width, self.height)
+
+
 
         # where the image is posiitoned, size
         self.rect = self.image.get_rect()
@@ -32,10 +42,27 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.movement()
         self.rect.x += self.x_change
-        self.rect.y += self.y_change
+        self.collision(self.x_change, 0)
 
+        self.rect.y += self.y_change
+        self.collision(0, self.y_change)
+
+        # reset movement each frame
         self.x_change = 0
         self.y_change = 0
+
+    def collision(self, x_change, y_change):
+        for wall in self.game.walls:
+            if pygame.sprite.collide_rect(self, wall):
+                if x_change > 0:
+                    self.rect.right = wall.rect.left
+                if x_change < 0:
+                    self.rect.left = wall.rect.right
+                if y_change > 0:
+                    self.rect.bottom = wall.rect.top
+                if y_change < 0:
+                    self.rect.top = wall.rect.bottom
+
 
     def movement(self):
         move = pygame.math.Vector2(0, 0)
@@ -61,12 +88,13 @@ class Player(pygame.sprite.Sprite):
         # Apply movement to x_change and y_change
         self.x_change = move.x
         self.y_change = move.y
+    
 
-class Block(pygame.sprite.Sprite):
+class Wall(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
-        self._layer = BLOCK_LAYER
-        self.groups = self.game.all_sprites, self.game.blocks
+        self._layer = WALL_LAYER
+        self.groups = self.game.all_sprites, self.game.walls
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.x = x * TILE_SIZE
@@ -74,9 +102,25 @@ class Block(pygame.sprite.Sprite):
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
-        self.image = pygame.Surface([self.width, self.height])
-        self.image.fill(BLUE)
+        self.image = self.game.character_spritesheet.get_sprite(40*32, 18*32, self.width, self.height)
 
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+class Ground(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.game = game
+        self._layer = GROUND_LAYER
+        self.groups = self.game.all_sprites
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.x = x * TILE_SIZE
+        self.y = y * TILE_SIZE
+        self.width = TILE_SIZE
+        self.height = TILE_SIZE
+
+        self.image = self.game.character_spritesheet.get_sprite(0*32, 15*32, self.width, self.height)
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y

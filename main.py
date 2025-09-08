@@ -13,11 +13,16 @@ class Game:
         # if the player hasn't died
         self.running = True
 
+        self.character_spritesheet = Spritesheet("img/dungeon.png")
+
+        # self.terrain_spritesheet = Spritesheet('img/')
+
     def createTilemap(self):
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
+                Ground(self, j, i)
                 if column == 1:
-                    Block(self, j, i)
+                    Wall(self, j, i)
                 if column == 2:
                     Player(self, j, i)
 
@@ -28,7 +33,7 @@ class Game:
         # group of sprites that we can control, allow us to update all the sprites at once
         self.all_sprites = pygame.sprite.LayeredUpdates()
         # storing immovable walls
-        self.blocks = pygame.sprite.LayeredUpdates()      
+        self.walls = pygame.sprite.LayeredUpdates()      
         # storing enemies
         self.enemies = pygame.sprite.LayeredUpdates()   
         # storing attacks
