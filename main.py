@@ -14,10 +14,18 @@ class Game:
         self.running = True
 
         self.character_spritesheet = Spritesheet("img/dungeon.png")
+
         sheet = pygame.image.load("img/player.png").convert_alpha()
         sheet_32 = pygame.transform.scale(sheet, (416, 1728))  # 50% size
         pygame.image.save(sheet_32, "img/player_32x32.png")
         self.player_spritesheet = Spritesheet("img/player_32x32.png")
+
+        sheet = pygame.image.load("img/skeleton.png").convert_alpha()
+        sheet_32 = pygame.transform.scale(sheet, (832, 2496))
+        pygame.image.save(sheet_32, "img/skeleton_32x32.png")
+        self.skeleton_spritesheet = Spritesheet("img/skeleton_32x32.png")
+
+        print(sheet.get_width(), sheet.get_height())
 
 
     def createTilemap(self):
@@ -28,6 +36,8 @@ class Game:
                     Wall(self, j, i, column)
                 if column == 90:
                     Player(self, j, i)
+                if column == 200:
+                    Enemy(self, j ,i)
 
     def new(self):
         # if the player is still playing
