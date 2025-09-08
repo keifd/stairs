@@ -125,49 +125,59 @@ class Player(pygame.sprite.Sprite):
 
 
     def collide(self, x_change, y_change):
+        # Enemy collision
+        if pygame.sprite.spritecollide(self, self.game.enemies, False):
+            self.kill()
+            self.game.playing = False
+
+        # Wall collision
         for wall in self.game.walls:
             if pygame.sprite.collide_rect(self, wall):
                 if x_change > 0:
                     self.rect.right = wall.rect.left
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.x += PLAYER_SPEED
                 if x_change < 0:
                     self.rect.left = wall.rect.right
+                    for sprite in self.game.all_sprites:
+                         sprite.rect.x -= PLAYER_SPEED
                 if y_change > 0:
                     self.rect.bottom = wall.rect.top
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.y += PLAYER_SPEED
                 if y_change < 0:
                     self.rect.top = wall.rect.bottom
-        
-        hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
-        if hits:
-            self.kill()
-            self.game.playing = False
+                    for sprite in self.game.all_sprites:
+                        sprite.rect.y -= PLAYER_SPEED
 
+        
 
 
 
     def movement(self):
-        move = pygame.math.Vector2(0, 0)
         keys = pygame.key.get_pressed()
-
         if keys[pygame.K_LEFT]:
-            move.x -= 1
+            for sprite in self.game.all_sprites:
+                sprite.rect.x += PLAYER_SPEED
+            self.x_change -= PLAYER_SPEED
             self.facing = 'left'
-        if keys[pygame.K_RIGHT]:
-            move.x += 1
+        elif keys[pygame.K_RIGHT]:
+            for sprite in self.game.all_sprites:
+                sprite.rect.x -= PLAYER_SPEED
+            self.x_change += PLAYER_SPEED
             self.facing = 'right'
-        if keys[pygame.K_UP]:
-            move.y -= 1
+        elif keys[pygame.K_UP]:
+            for sprite in self.game.all_sprites:
+                sprite.rect.y += PLAYER_SPEED
+            self.y_change -= PLAYER_SPEED
             self.facing = 'up'
-        if keys[pygame.K_DOWN]:
-            move.y += 1
+        elif keys[pygame.K_DOWN]:
+            for sprite in self.game.all_sprites:
+                sprite.rect.y -= PLAYER_SPEED
+            self.y_change += PLAYER_SPEED
             self.facing = 'down'
 
-        # Normalize diagonal movement
-        if move.length() > 0:
-            move = move.normalize() * PLAYER_SPEED
-
-        # Apply movement to x_change and y_change
-        self.x_change = move.x
-        self.y_change = move.y
+        
     
 
 class Wall(pygame.sprite.Sprite):
@@ -353,6 +363,7 @@ class Enemy(pygame.sprite.Sprite):
                     self.rect.bottom = wall.rect.top
                 if y_change < 0:
                     self.rect.top = wall.rect.bottom
+
 
             
 
