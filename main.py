@@ -14,16 +14,19 @@ class Game:
         self.running = True
 
         self.character_spritesheet = Spritesheet("img/dungeon.png")
+        sheet = pygame.image.load("img/player.png").convert_alpha()
+        sheet_32 = pygame.transform.scale(sheet, (416, 1728))  # 50% size
+        pygame.image.save(sheet_32, "img/player_32x32.png")
+        self.player_spritesheet = Spritesheet("img/player_32x32.png")
 
-        # self.terrain_spritesheet = Spritesheet('img/')
 
     def createTilemap(self):
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
                 Ground(self, j, i)
-                if column == 1:
-                    Wall(self, j, i)
-                if column == 2:
+                if column in [1,2,3,4,5,6,7]:
+                    Wall(self, j, i, column)
+                if column == 90:
                     Player(self, j, i)
 
     def new(self):
