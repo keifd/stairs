@@ -9,23 +9,18 @@ class Game:
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.caption = pygame.display.set_caption("Dungeon Fighter")
         self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font('VT323-Regular.ttf', 32)
 
         # if the player hasn't died
         self.running = True
 
         self.character_spritesheet = Spritesheet("img/dungeon.png")
-
-        sheet = pygame.image.load("img/player.png").convert_alpha()
-        sheet_32 = pygame.transform.scale(sheet, (416, 1728))  # 50% size
-        pygame.image.save(sheet_32, "img/player_32x32.png")
         self.player_spritesheet = Spritesheet("img/player_32x32.png")
-
-        sheet = pygame.image.load("img/skeleton.png").convert_alpha()
-        sheet_32 = pygame.transform.scale(sheet, (832, 2496))
-        pygame.image.save(sheet_32, "img/skeleton_32x32.png")
         self.skeleton_spritesheet = Spritesheet("img/skeleton_32x32.png")
 
-        print(sheet.get_width(), sheet.get_height())
+        self.intro_background = BLUE
+        self.end_background = RED
+    
 
 
     def createTilemap(self):
@@ -79,12 +74,56 @@ class Game:
             self.events()
             self.update()
             self.draw()
-        self.running = False
 
     def game_over(self):
-        pass
+
+        title = self.font.render('Game Over', True, BLACK)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
+        restart_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 +100, 100,50, WHITE, BLACK, 'Restart', 32)
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if restart_button.rect.collidepoint(event.pos):
+                        self.new()
+                        self.main()
+        
+            self.screen.fill(self.end_background)
+            self.screen.blit(title, title_rect)
+            self.screen.blit(restart_button.image, restart_button.rect)
+            self.clock.tick(FPS)
+            pygame.display.update()
+    
     def intro_screen(self):
-        pass
+        intro = True
+
+        title = self.font.render('Dungeon Fighter', True, BLACK)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
+
+        play_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT// 4 + 100, 100, 50 , WHITE, BLACK, 'Play', 32)
+        exit_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 + 170, 100, 50, WHITE, BLACK, 'Exit', 32)
+
+        while intro:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    intro = False
+                    self.running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if play_button.rect.collidepoint(event.pos):
+                        intro = False
+                    if exit_button.rect.collidepoint(event.pos):
+                        intro = False
+                        self.running = False
+
+            self.screen.fill(self.intro_background)
+            self.screen.blit(title, title_rect)
+            self.screen.blit(play_button.image, play_button.rect)
+            self.screen.blit(exit_button.image, exit_button.rect)
+            self.clock.tick(FPS)
+            pygame.display.update()
+
 
 
 g = Game()

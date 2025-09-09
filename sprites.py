@@ -127,7 +127,6 @@ class Player(pygame.sprite.Sprite):
     def collide(self, x_change, y_change):
         # Enemy collision
         if pygame.sprite.spritecollide(self, self.game.enemies, False):
-            self.kill()
             self.game.playing = False
 
         # Wall collision
@@ -364,17 +363,18 @@ class Enemy(pygame.sprite.Sprite):
                 if y_change < 0:
                     self.rect.top = wall.rect.bottom
 
+class Button:
+    def __init__(self, x, y, width, height, fg, bg, content, fontsize):
+        self.font = pygame.font.Font('VT323-Regular.ttf', fontsize)
 
+        self.image = pygame.Surface((width, height,))
+        self.image.fill(bg)
+        self.rect = self.image.get_rect()
+
+        self.rect.x = x
+        self.rect.y = y
+        
+        self.text = self.font.render(content, True, fg)
+        self.text_rect = self.text.get_rect(center=(width/2, height/2))
+        self.image.blit(self.text,self.text_rect)
             
-
-  
-    
-
-        
-    
-        
-        
-        
-
-            
-        
