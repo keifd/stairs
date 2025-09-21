@@ -78,5 +78,23 @@ class Button:
         self.text_rect = self.text.get_rect(center=(width/2, height/2))
         self.image.blit(self.text,self.text_rect)
 
+class HealthBar:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.max_hp = MAX_HP
 
-            
+    def draw(self, surface, current_hp):
+        # Background rectangle (full bar)
+        pygame.draw.rect(surface, (255, 0, 0), (self.x, self.y, self.width, self.height))
+
+        # Current health rectangle
+        health_ratio = current_hp / self.max_hp
+        current_width = self.width * health_ratio
+        pygame.draw.rect(surface, (0, 255, 0), (self.x, self.y, current_width, self.height))
+
+
+
+        

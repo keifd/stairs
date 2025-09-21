@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
+        
     
     def animate(self):
         left_animations = [
@@ -171,13 +172,15 @@ class Player(pygame.sprite.Sprite):
     
     def update(self):
         self.movement()
+        self.animate()
+
+        self.collide_enemy()
+        
         self.rect.x += self.x_change
-        self.collide(self.x_change, 0)
+        self.collide_wall()
 
         self.rect.y += self.y_change
-        self.collide(0, self.y_change)
-
-        self.animate()
+        self.collide_wall()
 
         # reset movement each frame
         self.x_change = 0
@@ -212,33 +215,61 @@ class Player(pygame.sprite.Sprite):
             self.y_change += speed
             self.facing = 'down'
 
-
-    def collide(self, x_change, y_change):
-        # Enemy collision
-        if pygame.sprite.spritecollide(self, self.game.enemies, False):
-            if self.facing == "left":
+    def collide_enemy(self):
+        hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
+        if hits:
+            if self.facing == "right":
                 for sprite in self.game.all_sprites:
                     sprite.rect.x += PLAYER_SPEED * KNOCK_DISTANCE
+                self.x_change -= PLAYER_SPEED * KNOCK_DISTANCE
 
+            elif self.facing == "left":
+                for sprite in self.game.all_sprites:
+                    sprite.rect.x -= PLAYER_SPEED * KNOCK_DISTANCE
+                self.x_change += PLAYER_SPEED * KNOCK_DISTANCE
+
+            elif self.facing == "up":
+                for sprite in self.game.all_sprites:
+                    sprite.rect.y -= PLAYER_SPEED * KNOCK_DISTANCE
+                self.y_change += PLAYER_SPEED * KNOCK_DISTANCE
+
+            elif self.facing == "down":
+                for sprite in self.game.all_sprites:
+                    sprite.rect.y += PLAYER_SPEED * KNOCK_DISTANCE
+                self.y_change -= PLAYER_SPEED * KNOCK_DISTANCE
+            
+             # Decrement health directly
+            self.current_hp -= 10
+
+            # Check for game over
+            if self.current_hp <= 0:
+                self.game.playing = False
+                self.game.game_over()
+                
+                
+
+
+
+    def collide_wall(self):
         # Wall collision
         for wall in self.game.walls:
             if pygame.sprite.collide_rect(self, wall):
-                if x_change > 0:
+                if self.x_change > 0:
                     self.rect.right = wall.rect.left
                     for sprite in self.game.all_sprites:
-                        sprite.rect.x += x_change  # use the real movement
-                if x_change < 0:
+                        sprite.rect.x += self.x_change  # use the real movement
+                if self.x_change < 0:
                     self.rect.left = wall.rect.right
                     for sprite in self.game.all_sprites:
-                        sprite.rect.x += x_change
-                if y_change > 0:
+                        sprite.rect.x += self.x_change
+                if self.y_change > 0:
                     self.rect.bottom = wall.rect.top
                     for sprite in self.game.all_sprites:
-                        sprite.rect.y += y_change
-                if y_change < 0:
+                        sprite.rect.y += self.y_change
+                if self.y_change < 0:
                     self.rect.top = wall.rect.bottom
                     for sprite in self.game.all_sprites:
-                        sprite.rect.y += y_change
+                        sprite.rect.y += self.y_change
 
 
         

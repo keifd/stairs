@@ -1,7 +1,7 @@
 import pygame
 from sprites import *
 from config import *
-from maps import *
+import maps
 import sys
 
 class Game:
@@ -24,7 +24,7 @@ class Game:
     
 
 
-    def createTilemap(self):
+    def createTilemap(self, tilemap):
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
                 Ground(self, j, i)
@@ -48,8 +48,10 @@ class Game:
         # storing attacks
         self.attacks = pygame.sprite.LayeredUpdates()     
 
-        self.createTilemap()
+        self.createTilemap(maps.world_1.stage_1)
         
+        self.player.current_hp = MAX_HP
+        self.player_health_bar = HealthBar(10, 10, 200, 20)
     
     def events(self):
         for event in pygame.event.get():
@@ -77,7 +79,10 @@ class Game:
     def draw(self):
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
-        # set the frame rate
+        
+        # draw player health bar
+        self.player_health_bar.draw(self.screen, self.player.current_hp)
+
         self.clock.tick(FPS)
         pygame.display.update()
 

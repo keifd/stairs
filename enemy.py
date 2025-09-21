@@ -29,11 +29,12 @@ class Enemy(pygame.sprite.Sprite):
     
     def update(self):
         self.movement()
+        self.animate()
+        
         self.rect.x += self.x_change
         self.collide(self.x_change, 0)
         self.rect.y += self.y_change
         self.collide(0, self.y_change)
-        self.animate()
 
 
         self.x_change = 0
