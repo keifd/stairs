@@ -1,6 +1,7 @@
 import pygame
 from sprites import *
 from config import *
+from healthpot import *
 import maps
 import sys
 
@@ -34,6 +35,8 @@ class Game:
                     self.player = Player(self, j, i)
                 if column == 'E':
                     Enemy(self, j ,i)
+                if column == 'H':  
+                    HealthPot(self, j, i)
 
     def new(self):
         # if the player is still playing
@@ -46,7 +49,9 @@ class Game:
         # storing enemies
         self.enemies = pygame.sprite.LayeredUpdates()   
         # storing attacks
-        self.attacks = pygame.sprite.LayeredUpdates()     
+        self.attacks = pygame.sprite.LayeredUpdates()  
+
+        self.healthpot = pygame.sprite.LayeredUpdates()   
 
         self.createTilemap(maps.world_1.stage_1)
         
