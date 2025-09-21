@@ -1,6 +1,7 @@
 import pygame
 from sprites import *
 from config import *
+from maps import *
 import sys
 
 class Game:
@@ -27,11 +28,11 @@ class Game:
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
                 Ground(self, j, i)
-                if column in [1,2,3,4,5,6,7]:
+                if column == 'W':
                     Wall(self, j, i, column)
-                if column == 90:
+                if column == 'P':
                     self.player = Player(self, j, i)
-                if column == 200:
+                if column == 'E':
                     Enemy(self, j ,i)
 
     def new(self):
