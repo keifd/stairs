@@ -30,7 +30,7 @@ class Game:
                 if column in [1,2,3,4,5,6,7]:
                     Wall(self, j, i, column)
                 if column == 90:
-                    Player(self, j, i)
+                    self.player = Player(self, j, i)
                 if column == 200:
                     Enemy(self, j ,i)
 
@@ -51,11 +51,23 @@ class Game:
         
     
     def events(self):
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    self.playing = False
-
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+                self.playing = False
+                pygame.quit()
+                sys.exit()
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if self.player.facing == "up":
+                        Attack(self, self.player.rect.x, self.player.rect.y - TILE_SIZE)
+                    if self.player.facing == "down":
+                        Attack(self, self.player.rect.x, self.player.rect.y + TILE_SIZE)
+                    if self.player.facing == "left":
+                        Attack(self, self.player.rect.x - TILE_SIZE, self.player.rect.y)
+                    if self.player.facing == "right":
+                        Attack(self, self.player.rect.x + TILE_SIZE, self.player.rect.y)
 
     def update(self):
         self.all_sprites.update()
@@ -76,26 +88,30 @@ class Game:
             self.draw()
 
     def game_over(self):
+        end = True
 
         title = self.font.render('Game Over', True, BLACK)
         title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
         restart_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 +100, 100,50, WHITE, BLACK, 'Restart', 32)
-        while self.running:
+        
+        while end:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    end = False
                     self.running = False
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if restart_button.rect.collidepoint(event.pos):
+                        end = False
                         self.new()
                         self.main()
-        
+                
+                          
             self.screen.fill(self.end_background)
             self.screen.blit(title, title_rect)
             self.screen.blit(restart_button.image, restart_button.rect)
             self.clock.tick(FPS)
             pygame.display.update()
-    
+        
     def intro_screen(self):
         intro = True
 
@@ -126,12 +142,13 @@ class Game:
 
 
 
-g = Game()
-g.intro_screen()
-g.new()
-while g.running:
-    g.main()
-    g.game_over()
+if __name__ == "__main__":
+    g = Game()
+    g.intro_screen()
+    g.new()
+    while g.running:
+        g.main()
+        g.game_over()
 
-pygame.quit()
-sys.exit()
+    pygame.quit()
+    sys.exit()
