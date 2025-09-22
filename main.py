@@ -21,6 +21,7 @@ class Game:
 
         self.intro_background = BLUE
         self.end_background = RED
+        self.pause_background = BLACK
     
 
 
@@ -71,6 +72,9 @@ class Game:
                 sys.exit()
                 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.pause_screen()
+
                 if event.key == pygame.K_SPACE:
                     if self.player.facing == "up":
                         Attack(self, self.player.rect.x, self.player.rect.y - TILE_SIZE)
@@ -108,7 +112,8 @@ class Game:
         title = self.font.render('Game Over', True, BLACK)
         title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
         restart_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 +100, 100,50, WHITE, BLACK, 'Restart', 32)
-        
+        exit_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 + 170, 100, 50, WHITE, BLACK, 'Exit', 32)
+
         while end:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -117,13 +122,17 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if restart_button.rect.collidepoint(event.pos):
                         end = False
-                        self.new()
-                        self.main()
+                        self.playing = False
+                    if exit_button.rect.collidepoint(event.pos):
+                        end = False
+                        self.running = False
+                        self.playing = False
                 
                           
             self.screen.fill(self.end_background)
             self.screen.blit(title, title_rect)
             self.screen.blit(restart_button.image, restart_button.rect)
+            self.screen.blit(exit_button.image, exit_button.rect)
             self.clock.tick(FPS)
             pygame.display.update()
         
@@ -154,16 +163,46 @@ class Game:
             self.screen.blit(exit_button.image, exit_button.rect)
             self.clock.tick(FPS)
             pygame.display.update()
+    
+    def pause_screen(self):
+        pause = True
+
+        title = self.font.render('Dungeon Fighter', True, BLACK)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
+
+        continue_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT// 4 + 100, 100, 50 , WHITE, BLACK, 'Continue', 32)
+        exit_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 + 170, 100, 50, WHITE, BLACK, 'Exit', 32)
+
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pause = False
+                    self.running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if continue_button.rect.collidepoint(event.pos):
+                        pause = False
+                    if exit_button.rect.collidepoint(event.pos):
+                        pause = False
+                        self.running = False
+                        self.playing = False
+
+
+            self.screen.fill(self.pause_background)
+            self.screen.blit(title, title_rect)
+            self.screen.blit(continue_button.image, continue_button.rect)
+            self.screen.blit(exit_button.image, exit_button.rect)
+            self.clock.tick(FPS)
+            pygame.display.update()
+
 
 
 
 if __name__ == "__main__":
     g = Game()
     g.intro_screen()
-    g.new()
     while g.running:
+        g.new()
         g.main()
-        g.game_over()
 
     pygame.quit()
     sys.exit()
