@@ -61,7 +61,13 @@ class Game:
         self.createTilemap(maps.world_1.stage_1)
         
         self.player.current_hp = MAX_HP
-        self.player_health_bar = HealthBar(10, 10, 200, 20)
+        self.player_health_bar = HealthBar(15, 15, 200, 30)
+        self.player.currency = 0
+        self.currency_number = Currency(
+            self.player_health_bar.x + self.player_health_bar.width + 20,
+                                 self.player_health_bar.y,
+                                 self.font,
+                                )
     
     def events(self):
         for event in pygame.event.get():
@@ -94,6 +100,7 @@ class Game:
         self.all_sprites.draw(self.screen)
         
         # draw player health bar
+        self.currency_number.draw(self.screen, self.player.currency)
         self.player_health_bar.draw(self.screen, self.player.current_hp)
 
         self.clock.tick(FPS)

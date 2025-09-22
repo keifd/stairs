@@ -50,6 +50,18 @@ class HealthBar:
         health_ratio = current_hp / self.max_hp
         current_width = self.width * health_ratio
         pygame.draw.rect(surface, (0, 255, 0), (self.x, self.y, current_width, self.height))
+    
+class Currency:
+    def __init__(self, x, y, font):
+        self.x = x
+        self.y = y
+        self.font = font
+        self.color = YELLOW
+
+    def draw(self, surface, current_currency):
+        text = self.font.render(f"${current_currency}", True, self.color)
+        surface.blit(text, (self.x, self.y))
+
 
 
 
