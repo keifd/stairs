@@ -33,7 +33,7 @@ class Attack(pygame.sprite.Sprite):
     def collide(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, True)
         if hits:
-            self.game.player.currency += 5
+            self.game.currency += 5
     
     def animate(self):
         left_animations = [

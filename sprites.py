@@ -7,6 +7,7 @@ from healthpot import *
 from deathpot import *
 from wall import *
 from ground import *
+from stair import *
 import random
 
 class Spritesheet:

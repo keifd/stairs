@@ -195,23 +195,15 @@ class Player(pygame.sprite.Sprite):
             speed = PLAYER_SPEED * 1.5
 
         if keys[pygame.K_LEFT]:
-            for sprite in self.game.all_sprites:
-                sprite.rect.x += speed
             self.x_change -= speed
             self.facing = 'left'
         elif keys[pygame.K_RIGHT]:
-            for sprite in self.game.all_sprites:
-                sprite.rect.x -= speed
             self.x_change += speed
             self.facing = 'right'
         elif keys[pygame.K_UP]:
-            for sprite in self.game.all_sprites:
-                sprite.rect.y += speed
             self.y_change -= speed
             self.facing = 'up'
         elif keys[pygame.K_DOWN]:
-            for sprite in self.game.all_sprites:
-                sprite.rect.y -= speed
             self.y_change += speed
             self.facing = 'down'
 
@@ -219,36 +211,22 @@ class Player(pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
         if hits:
             if self.facing == "right":
-                for sprite in self.game.all_sprites:
-                    sprite.rect.x += PLAYER_SPEED * KNOCK_DISTANCE
                 self.x_change -= PLAYER_SPEED * KNOCK_DISTANCE
-
             elif self.facing == "left":
-                for sprite in self.game.all_sprites:
-                    sprite.rect.x -= PLAYER_SPEED * KNOCK_DISTANCE
                 self.x_change += PLAYER_SPEED * KNOCK_DISTANCE
-
             elif self.facing == "up":
-                for sprite in self.game.all_sprites:
-                    sprite.rect.y -= PLAYER_SPEED * KNOCK_DISTANCE
                 self.y_change += PLAYER_SPEED * KNOCK_DISTANCE
-
             elif self.facing == "down":
-                for sprite in self.game.all_sprites:
-                    sprite.rect.y += PLAYER_SPEED * KNOCK_DISTANCE
                 self.y_change -= PLAYER_SPEED * KNOCK_DISTANCE
             
              # Decrement health directly
-            self.current_hp -= 10
+            self.game.health -= 10
 
             # Check for game over
-            if self.current_hp <= 0:
+            if self.game.health <= 0:
                 self.game.playing = False
                 self.game.game_over()
                 
-                
-
-
 
     def collide_wall(self):
         # Wall collision
@@ -256,20 +234,12 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.collide_rect(self, wall):
                 if self.x_change > 0:
                     self.rect.right = wall.rect.left
-                    for sprite in self.game.all_sprites:
-                        sprite.rect.x += self.x_change  # use the real movement
                 if self.x_change < 0:
                     self.rect.left = wall.rect.right
-                    for sprite in self.game.all_sprites:
-                        sprite.rect.x += self.x_change
                 if self.y_change > 0:
                     self.rect.bottom = wall.rect.top
-                    for sprite in self.game.all_sprites:
-                        sprite.rect.y += self.y_change
                 if self.y_change < 0:
                     self.rect.top = wall.rect.bottom
-                    for sprite in self.game.all_sprites:
-                        sprite.rect.y += self.y_change
     
 
 

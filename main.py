@@ -22,6 +22,7 @@ class Game:
         self.intro_background = BLUE
         self.end_background = RED
         self.pause_background = BLACK
+
     
 
 
@@ -37,12 +38,18 @@ class Game:
                     Enemy(self, j ,i)
                 if column == 'H':  
                     HealthPot(self, j, i)
-                if column == "D":
+                if column == 'D':
                     DeathPot(self, j , i)
+                if column == 'S':
+                    Stair(self, j ,i, 'down')
+                if column == 'U':
+                    Stair(self, j, i, 'up')
 
     def new(self):
         # if the player is still playing
         self.playing = True
+        self.health = MAX_HP
+        self.currency = 0
 
         # group of sprites that we can control, allow us to update all the sprites at once
         self.all_sprites = pygame.sprite.LayeredUpdates()
@@ -55,19 +62,45 @@ class Game:
 
         self.healthpot = pygame.sprite.LayeredUpdates()
 
-        self.deathpot = pygame.sprite.LayeredUpdates()     
+        self.deathpot = pygame.sprite.LayeredUpdates()   
+
+        self.stair = pygame.sprite.LayeredUpdates()  
 
 
-        self.createTilemap(maps.world_1.stage_1)
+        self.createTilemap(maps.worlds['world_1']['stage_1'])
         
-        self.player.current_hp = MAX_HP
         self.player_health_bar = HealthBar(15, 15, 200, 30)
-        self.player.currency = 0
         self.currency_number = Currency(
             self.player_health_bar.x + self.player_health_bar.width + 20,
                                  self.player_health_bar.y,
                                  self.font,
                                 )
+        
+        self.current_stage_index = 0
+    
+    def change_map(self, direction, spawn):
+
+
+        self.all_sprites.empty()
+        self.enemies.empty()
+        self.walls.empty()
+        self.healthpot.empty()
+        self.deathpot.empty()
+        self.stair.empty()
+        self.attacks.empty()
+
+        if direction == "down":
+            self.current_stage_index += 1
+            stage = maps.stages[self.current_stage_index]
+            self.createTilemap(maps.worlds['world_1'][stage])
+            self.spawn_beside = spawn
+        elif direction == "up":
+            self.current_stage_index -= 1
+            stage = maps.stages[self.current_stage_index]
+            self.createTilemap(maps.worlds['world_1'][stage])
+            self.player.rect.topleft = self.spawn_beside
+
+
     
     def events(self):
         for event in pygame.event.get():
@@ -94,14 +127,19 @@ class Game:
     def update(self):
         self.all_sprites.update()
 
+        self.camera_x = self.player.rect.centerx - WINDOW_WIDTH // 2
+        self.camera_y = self.player.rect.centery - WINDOW_HEIGHT // 2
+
 
     def draw(self):
         self.screen.fill(BLACK)
-        self.all_sprites.draw(self.screen)
+
+        for sprite in self.all_sprites:
+            self.screen.blit(sprite.image, (sprite.rect.x - self.camera_x, sprite.rect.y - self.camera_y))
         
         # draw player health bar
-        self.currency_number.draw(self.screen, self.player.currency)
-        self.player_health_bar.draw(self.screen, self.player.current_hp)
+        self.currency_number.draw(self.screen, self.currency)
+        self.player_health_bar.draw(self.screen, self.health)
 
         self.clock.tick(FPS)
         pygame.display.update()
@@ -185,6 +223,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     pause = False
                     self.running = False
+                    self.playing = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if continue_button.rect.collidepoint(event.pos):
                         pause = False

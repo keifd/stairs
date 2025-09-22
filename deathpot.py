@@ -27,8 +27,8 @@ class DeathPot(pygame.sprite.Sprite):
     
     def collide(self):
         if pygame.sprite.collide_rect(self, self.game.player):
-            self.game.player.current_hp -= 90
-            if self.game.player.current_hp <= 0:
+            self.game.health -= 90
+            if self.game.health <= 0:
                 self.game.playing = False
                 self.game.game_over()
             self.kill()

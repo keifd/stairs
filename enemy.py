@@ -18,7 +18,7 @@ class Enemy(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
         self.facing = random.choice(["left", "right", "up", "down"])
-        self.max_travel = random.randint(7,120)
+        self.max_travel = random.randint(20,200)
         self.movement_loop = 0
         self.animation_loop = 0
 

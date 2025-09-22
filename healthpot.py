@@ -36,7 +36,7 @@ class HealthPot(pygame.sprite.Sprite):
     
     def collide(self):
         if pygame.sprite.collide_rect(self, self.game.player):
-            self.game.player.current_hp += 20
-            if self.game.player.current_hp > MAX_HP:
-                self.game.player.current_hp = MAX_HP
+            self.game.health += 20
+            if self.game.health > MAX_HP:
+                self.game.health = MAX_HP
             self.kill()
