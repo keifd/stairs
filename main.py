@@ -44,12 +44,18 @@ class Game:
                     Stair(self, j ,i, 'down')
                 if column == 'U':
                     Stair(self, j, i, 'up')
+                if column == 'K':
+                    Key(self, j, i)
+                if column == ' ':
+                    Void(self, j, i)
+
 
     def new(self):
         # if the player is still playing
         self.playing = True
         self.health = MAX_HP
         self.currency = 0
+        self.key = 0
 
         # group of sprites that we can control, allow us to update all the sprites at once
         self.all_sprites = pygame.sprite.LayeredUpdates()
@@ -60,11 +66,13 @@ class Game:
         # storing attacks
         self.attacks = pygame.sprite.LayeredUpdates()  
 
-        self.healthpot = pygame.sprite.LayeredUpdates()
+        self.healthpots = pygame.sprite.LayeredUpdates()
 
-        self.deathpot = pygame.sprite.LayeredUpdates()   
+        self.deathpots = pygame.sprite.LayeredUpdates()   
 
-        self.stair = pygame.sprite.LayeredUpdates()  
+        self.stairs = pygame.sprite.LayeredUpdates()  
+
+        self.keys = pygame.sprite.LayeredUpdates() 
 
 
         self.createTilemap(maps.worlds['world_1']['stage_1'])
@@ -84,10 +92,11 @@ class Game:
         self.all_sprites.empty()
         self.enemies.empty()
         self.walls.empty()
-        self.healthpot.empty()
-        self.deathpot.empty()
-        self.stair.empty()
+        self.healthpots.empty()
+        self.deathpots.empty()
+        self.stairs.empty()
         self.attacks.empty()
+        self.keys.empty()
 
         if direction == "down":
             self.current_stage_index += 1
@@ -99,6 +108,7 @@ class Game:
             stage = maps.stages[self.current_stage_index]
             self.createTilemap(maps.worlds['world_1'][stage])
             self.player.rect.topleft = self.spawn_beside
+        
 
 
     

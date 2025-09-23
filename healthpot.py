@@ -6,7 +6,7 @@ class HealthPot(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
         self._layer = HEALTH_POT_LAYER
-        self.groups = self.game.all_sprites, self.game.healthpot
+        self.groups = self.game.all_sprites, self.game.healthpots
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.x = x * TILE_SIZE

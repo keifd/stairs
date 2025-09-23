@@ -6,8 +6,9 @@
 # deathpot = D
 # up_stair = U
 # down_stair = S
+# key = K
 worlds = ['world_1', 'world_2', 'world_3']
-stages = ['stage_1', 'stage_2', 'stage_3']
+stages = ['stage_1', 'stage_2', 'stage_3', 'stage_4']
 
 worlds = {
     "world_1": {
@@ -48,16 +49,42 @@ worlds = {
             'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
         ],
         "stage_3": [
-            '                                                  W.',
-            'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.',
-            'WUWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.',
+            '                           WWWWWWWWWWWWWWWWWWWWWWWWWW',
+            '                           W..........E.............W',
+            '                           W.WWWWWWWWWWWWWWWWWWWWWW.W',
+            'WWWWWWWWWWWWWWWWWWWWWWWWWWWW.WWWWWWWWWWWWWWWWWWWWWW.W',
+            'WUWWWWWWWWWWWWWWWWWWWWWWWWWWKWWWWWWWWWWWWWWWWWWWWWW.W',
             'WPWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.W',
             'W.WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.W',
-            'W.......E...........................................W',
-            'W...........E............................WWWWWWWWWWWWW',
-            'W................E.......................W',
+            'W.......E...........................E......H........W',
+            'W...........E...................WWWWWWWWWWWWWWWWWWWWW',
+            'W................E...............................S.DW',
+            'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW..WWWWWWWWWWWWW',
+            '                                      W..W            ',
+            '                                      W..W            ',
+            '                                      W..W            ',
+            '                                      W..W            ',
+            '                                      WWWW            ',
+        ],
+         "stage_4": [
+            'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
+            'WUP.......H...........WWWWWWWWWWW',
+            'W......................WWWWWWWWWW',
+            'W................H......WWWWWWWWW',
+            'W........................WWWWWWWW',
+            'W.......H.................WWWWWWW',
+            'W..........................WWWWWW',
+            'W.........................WWWWWWW',
+            'W............H............WWWWWWWW',
+            'W.....H.................WWWWWWWWW',
+            'W......................WWWWWWWWWWWWWWWWWW',
+            'W..H.....................E..............W',
+            'W........................E..............W',
+            'W........................E..............W',
+            'W........................E..............W',
             'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
         ],
+        
     },
     "world_2": {
         "stage_1": [

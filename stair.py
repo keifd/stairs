@@ -6,7 +6,7 @@ class Stair(pygame.sprite.Sprite):
     def __init__(self, game, x, y, direction):
         self.game = game
         self._layer = STAIR_LAYER
-        self.groups = self.game.all_sprites, self.game.stair
+        self.groups = self.game.all_sprites, self.game.stairs
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.x = x * TILE_SIZE

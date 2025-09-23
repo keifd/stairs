@@ -1,11 +1,12 @@
 import pygame
 from config import *
+import random
 
-class DeathPot(pygame.sprite.Sprite):
+class Key(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
-        self._layer = DEATH_POT_LAYER
-        self.groups = self.game.all_sprites, self.game.deathpots
+        self._layer = KEY_LAYER
+        self.groups = self.game.all_sprites, self.game.keys
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.x = x * TILE_SIZE
@@ -13,9 +14,9 @@ class DeathPot(pygame.sprite.Sprite):
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
-        hp = [28*32, 24*32]
+        key = [54*32, 45*32]
 
-        self.image = self.game.character_spritesheet.get_sprite(hp[0], hp[1], self.width, self.height)
+        self.image = self.game.character_spritesheet.get_sprite(key[0], key[1], self.width, self.height)
             
             
         self.rect = self.image.get_rect()
@@ -27,8 +28,4 @@ class DeathPot(pygame.sprite.Sprite):
     
     def collide(self):
         if pygame.sprite.collide_rect(self, self.game.player):
-            self.game.health -= 90
-            if self.game.health <= 0:
-                self.game.playing = False
-                self.game.game_over()
-            self.kill()
+            self.game.key += 1
