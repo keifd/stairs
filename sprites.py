@@ -3,12 +3,14 @@ from config import *
 from player import *
 from enemy import *
 from attack import *
-from healthpot import *
+from food import *
 from deathpot import *
 from wall import *
 from ground import *
 from stair import *
 from key import *
+from gate import *
+from healthpot import *
 import random
 
 class Spritesheet:
@@ -57,12 +59,12 @@ class Button:
         self.image.blit(self.text,self.text_rect)
 
 class HealthBar:
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, max_hp):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.max_hp = MAX_HP
+        self.max_hp = max_hp
 
     def draw(self, surface, current_hp):
         # Background rectangle (full bar)

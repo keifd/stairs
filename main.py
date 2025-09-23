@@ -36,8 +36,8 @@ class Game:
                     self.player = Player(self, j, i)
                 if column == 'E':
                     Enemy(self, j ,i)
-                if column == 'H':  
-                    HealthPot(self, j, i)
+                if column == 'F':  
+                    Food(self, j, i)
                 if column == 'D':
                     DeathPot(self, j , i)
                 if column == 'S':
@@ -48,12 +48,17 @@ class Game:
                     Key(self, j, i)
                 if column == ' ':
                     Void(self, j, i)
+                if column == 'G':
+                    Gate(self, j, i)
+                if column == 'H':
+                    HealthPot(self, j, i)
 
 
     def new(self):
         # if the player is still playing
         self.playing = True
-        self.health = MAX_HP
+        self.MAX_HP = 100
+        self.health = self.MAX_HP
         self.currency = 0
         self.key = 0
 
@@ -66,7 +71,7 @@ class Game:
         # storing attacks
         self.attacks = pygame.sprite.LayeredUpdates()  
 
-        self.healthpots = pygame.sprite.LayeredUpdates()
+        self.foods = pygame.sprite.LayeredUpdates()
 
         self.deathpots = pygame.sprite.LayeredUpdates()   
 
@@ -74,29 +79,36 @@ class Game:
 
         self.keys = pygame.sprite.LayeredUpdates() 
 
+        self.gates = pygame.sprite.LayeredUpdates()
+
+        self.healthpots = pygame.sprite.LayeredUpdates()
+
 
         self.createTilemap(maps.worlds['world_1']['stage_1'])
         
-        self.player_health_bar = HealthBar(15, 15, 200, 30)
+        self.player_health_bar = HealthBar(15, 15, 200, 30, self.MAX_HP)
         self.currency_number = Currency(
-            self.player_health_bar.x + self.player_health_bar.width + 20,
-                                 self.player_health_bar.y,
-                                 self.font,
+                                self.player_health_bar.x,
+                                self.player_health_bar.y + self.player_health_bar.height + 15,
+                                self.font,
                                 )
         
         self.current_stage_index = 0
     
-    def change_map(self, direction, spawn):
-
-
+    def clear_sprites(self):
         self.all_sprites.empty()
         self.enemies.empty()
         self.walls.empty()
-        self.healthpots.empty()
+        self.foods.empty()
         self.deathpots.empty()
         self.stairs.empty()
         self.attacks.empty()
         self.keys.empty()
+        self.gates.empty()
+        self.healthpots.empty()
+
+    def change_stage(self, direction, spawn):
+        self.clear_sprites()
 
         if direction == "down":
             self.current_stage_index += 1
@@ -109,6 +121,13 @@ class Game:
             self.createTilemap(maps.worlds['world_1'][stage])
             self.player.rect.topleft = self.spawn_beside
         
+    def change_boss(self):
+        self.clear_sprites()
+        self.current_stage_index = -1
+        stage = maps.stages[self.current_stage_index]
+
+        self.createTilemap(maps.worlds['world_1'][stage])
+
 
 
     

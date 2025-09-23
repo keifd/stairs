@@ -2,11 +2,11 @@ import pygame
 from config import *
 import random
 
-class Key(pygame.sprite.Sprite):
+class Gate(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
-        self._layer = KEY_LAYER
-        self.groups = self.game.all_sprites, self.game.keys
+        self._layer = GATE_LAYER
+        self.groups = self.game.all_sprites, self.game.gates
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.x = x * TILE_SIZE
@@ -14,7 +14,7 @@ class Key(pygame.sprite.Sprite):
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
-        key = [54*32, 45*32]
+        key = [32*32, 15*32]
 
         self.image = self.game.character_spritesheet.get_sprite(key[0], key[1], self.width, self.height)
             
@@ -28,5 +28,8 @@ class Key(pygame.sprite.Sprite):
     
     def collide(self):
         if pygame.sprite.collide_rect(self, self.game.player):
-            self.game.key += 1
-            self.kill()
+            if self.game.key > 0:
+                self.game.change_boss()
+                self.game.key -= 1
+            else:
+                pass   # do nothing

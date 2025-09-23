@@ -34,4 +34,4 @@ class Stair(pygame.sprite.Sprite):
     
     def collide(self):
         if pygame.sprite.collide_rect(self, self.game.player):
-            self.game.change_map(self.direction, self.spawn)
+            self.game.change_stage(self.direction, self.spawn)
