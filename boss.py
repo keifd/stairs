@@ -1,5 +1,6 @@
 import pygame
 from config import *
+from projectile import *
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -33,11 +34,12 @@ class Boss(pygame.sprite.Sprite):
         self.bar_x = (self.game.screen.get_width() - self.bar_width) // 2  # center horizontally
         self.bar_y = self.game.screen.get_height() - self.bar_height - 20  # 20 px from bottom
 
+        self.time = 0
     def update(self):
         self.movement()
         self.animate()
 
-        self.charge_attack()
+        self.shoot_projectiles()
         
         self.rect.x += self.x_change
         self.collide(self.x_change, 0)
@@ -99,5 +101,11 @@ class Boss(pygame.sprite.Sprite):
         # Optional: white border
         pygame.draw.rect(surface, WHITE, (self.bar_x, self.bar_y, self.bar_width, self.bar_height), 2)
 
-    def charge_attack(self):
-        pass
+    def shoot_projectiles(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.time > 2000:
+            self.time = current_time
+            # spawns 3 projectiles at a time
+            offsets = [-15, 0, 15]  # horizontal spread
+            for offset in offsets:
+                Projectile(self.game, self.rect.centerx + offset, self.rect.centery)

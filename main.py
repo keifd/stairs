@@ -87,6 +87,8 @@ class Game:
 
         self.bosses = pygame.sprite.LayeredUpdates()
 
+        self.projectiles = pygame.sprite.LayeredUpdates()
+
 
         self.createTilemap(maps.worlds['world_1']['stage_1'])
         

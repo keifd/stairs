@@ -12,6 +12,7 @@ from key import *
 from gate import *
 from healthpot import *
 from boss import *
+from projectile import *
 
 class Spritesheet:
     def __init__(self, file):
