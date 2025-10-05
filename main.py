@@ -23,6 +23,9 @@ class Game:
         self.end_background = RED
         self.pause_background = BLACK
 
+        self.worlds = ['world_1', 'world_2', 'world_3']
+        self.stages = ['stage_1', 'stage_2', 'stage_3', 'stage_4', 'boss_stage']
+
     
 
 
@@ -64,6 +67,9 @@ class Game:
         self.currency = 0
         self.key = 0
 
+        # dont change this
+        self.world = 1
+
         # group of sprites that we can control, allow us to update all the sprites at once
         self.all_sprites = pygame.sprite.LayeredUpdates()
         # storing immovable walls
@@ -88,7 +94,8 @@ class Game:
         self.bosses = pygame.sprite.LayeredUpdates()
 
         self.projectiles = pygame.sprite.LayeredUpdates()
-
+        
+        self.portals = pygame.sprite.LayeredUpdates()
 
         self.createTilemap(maps.worlds['world_1']['stage_1'])
         
@@ -115,27 +122,43 @@ class Game:
         self.gates.empty()
         self.healthpots.empty()
         self.bosses.empty()
+        self.projectiles.empty()
+        self.portals.empty()
 
     def change_stage(self, direction, spawn):
         self.clear_sprites()
 
         if direction == "down":
             self.current_stage_index += 1
-            stage = maps.stages[self.current_stage_index]
-            self.createTilemap(maps.worlds['world_1'][stage])
+            stage = self.stages[self.current_stage_index]
+            world = self.worlds[self.world - 1]
+            self.createTilemap(maps.worlds[world][stage])
             self.spawn_beside = spawn
         elif direction == "up":
             self.current_stage_index -= 1
-            stage = maps.stages[self.current_stage_index]
-            self.createTilemap(maps.worlds['world_1'][stage])
+            stage = self.stages[self.current_stage_index]
+            world = self.worlds[self.world - 1]
+            self.createTilemap(maps.worlds[world][stage])
             self.player.rect.topleft = self.spawn_beside
-        
+
+    def change_world(self):
+        self.clear_sprites()
+
+        self.current_stage_index = 0
+        self.world += 1
+        stage = self.stages[self.current_stage_index]
+        world = self.worlds[self.world - 1]
+        self.createTilemap(maps.worlds[world][stage])
+
+
     def change_boss(self):
         self.clear_sprites()
-        self.current_stage_index = -1
-        stage = maps.stages[self.current_stage_index]
 
-        self.createTilemap(maps.worlds['world_1'][stage])
+        # goes to the last stage in the stages list
+        self.current_stage_index = -1
+        stage = self.stages[self.current_stage_index]
+        world = self.worlds[self.world - 1]
+        self.createTilemap(maps.worlds[world][stage])
         self.boss_stage = True
         
 

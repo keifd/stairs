@@ -13,7 +13,11 @@ class Ground(pygame.sprite.Sprite):
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
-        self.image = self.game.character_spritesheet.get_sprite(0*32, 15*32, self.width, self.height)
+        if self.game.world == 1:
+            self.image = self.game.character_spritesheet.get_sprite(0*32, 15*32, self.width, self.height)
+        elif self.game.world == 2:
+            self.image = self.game.character_spritesheet.get_sprite(7*32, 15*32, self.width, self.height)
+
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y

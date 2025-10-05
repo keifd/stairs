@@ -1,6 +1,7 @@
 import pygame
 from config import *
 from projectile import *
+from portal import *
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -86,7 +87,9 @@ class Boss(pygame.sprite.Sprite):
         if self.health <= 0:
             self.health = 0
             self.kill()
+            self.game.currency += 100
             self.game.boss_stage = False
+            Portal(self.game, self.rect.centerx, self.rect.centery)
     
     def draw(self, surface):
 

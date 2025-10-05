@@ -14,9 +14,8 @@ class Key(pygame.sprite.Sprite):
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
-        key = [54*32, 45*32]
 
-        self.image = self.game.character_spritesheet.get_sprite(key[0], key[1], self.width, self.height)
+        self.image = self.game.character_spritesheet.get_sprite(54*32, 45*32, self.width, self.height)
             
             
         self.rect = self.image.get_rect()

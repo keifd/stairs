@@ -1,6 +1,6 @@
 import pygame
 from config import *
-import random
+
 
 class Gate(pygame.sprite.Sprite):
     def __init__(self, game, x, y):

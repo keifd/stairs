@@ -1,6 +1,5 @@
 import pygame
 from config import *
-import random
 
 class Stair(pygame.sprite.Sprite):
     def __init__(self, game, x, y, direction):

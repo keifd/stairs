@@ -13,6 +13,7 @@ from gate import *
 from healthpot import *
 from boss import *
 from projectile import *
+from portal import *
 
 class Spritesheet:
     def __init__(self, file):
