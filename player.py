@@ -175,6 +175,7 @@ class Player(pygame.sprite.Sprite):
         self.animate()
 
         self.collide_enemy()
+        self.collide_boss()
         
         self.rect.x += self.x_change
         self.collide_wall()
@@ -209,6 +210,26 @@ class Player(pygame.sprite.Sprite):
 
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
+        if hits:
+            if self.facing == "right":
+                self.x_change -= PLAYER_SPEED * KNOCK_DISTANCE
+            elif self.facing == "left":
+                self.x_change += PLAYER_SPEED * KNOCK_DISTANCE
+            elif self.facing == "up":
+                self.y_change += PLAYER_SPEED * KNOCK_DISTANCE
+            elif self.facing == "down":
+                self.y_change -= PLAYER_SPEED * KNOCK_DISTANCE
+            
+             # Decrement health directly
+            self.game.health -= 10
+
+            # Check for game over
+            if self.game.health <= 0:
+                self.game.playing = False
+                self.game.game_over()
+
+    def collide_boss(self):
+        hits = pygame.sprite.spritecollide(self, self.game.bosses, False)
         if hits:
             if self.facing == "right":
                 self.x_change -= PLAYER_SPEED * KNOCK_DISTANCE

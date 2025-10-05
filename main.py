@@ -52,6 +52,8 @@ class Game:
                     Gate(self, j, i)
                 if column == 'H':
                     HealthPot(self, j, i)
+                if column == 'B':
+                    self.boss = Boss(self, j, i)
 
 
     def new(self):
@@ -83,10 +85,12 @@ class Game:
 
         self.healthpots = pygame.sprite.LayeredUpdates()
 
+        self.bosses = pygame.sprite.LayeredUpdates()
+
 
         self.createTilemap(maps.worlds['world_1']['stage_1'])
         
-        self.player_health_bar = HealthBar(15, 15, 200, 30, self.MAX_HP)
+        self.player_health_bar = HealthBar(15, 15, 200, 30)
         self.currency_number = Currency(
                                 self.player_health_bar.x,
                                 self.player_health_bar.y + self.player_health_bar.height + 15,
@@ -94,6 +98,8 @@ class Game:
                                 )
         
         self.current_stage_index = 0
+
+        self.boss_stage = False
     
     def clear_sprites(self):
         self.all_sprites.empty()
@@ -106,6 +112,7 @@ class Game:
         self.keys.empty()
         self.gates.empty()
         self.healthpots.empty()
+        self.bosses.empty()
 
     def change_stage(self, direction, spawn):
         self.clear_sprites()
@@ -127,6 +134,8 @@ class Game:
         stage = maps.stages[self.current_stage_index]
 
         self.createTilemap(maps.worlds['world_1'][stage])
+        self.boss_stage = True
+        
 
 
 
@@ -168,7 +177,12 @@ class Game:
         
         # draw player health bar
         self.currency_number.draw(self.screen, self.currency)
-        self.player_health_bar.draw(self.screen, self.health)
+        self.player_health_bar.draw(self.screen, self.health, self.MAX_HP)
+
+        # draw boss health when boss stage is True
+        if self.boss_stage:
+            self.boss.draw(self.screen)
+
 
         self.clock.tick(FPS)
         pygame.display.update()

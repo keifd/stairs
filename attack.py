@@ -26,14 +26,23 @@ class Attack(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
+        self.hit = False
+
     def update(self):
         self.animate()
         self.collide()
     
     def collide(self):
-        hits = pygame.sprite.spritecollide(self, self.game.enemies, True)
-        if hits:
-            self.game.currency += 5
+        if not self.hit:
+            hits = pygame.sprite.spritecollide(self, self.game.enemies, True)
+            if hits:
+                self.game.currency += 5
+
+            hits = pygame.sprite.spritecollide(self, self.game.bosses, False)
+            for boss in hits:
+                boss.take_damadge(10)
+                self.hit = True  
+                break  
     
     def animate(self):
         left_animations = [
