@@ -4,14 +4,20 @@ import math
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, chase_player = False):
         self.game = game
         self._layer = ENEMY_LAYER
         self.groups = self.game.all_sprites, self.game.enemies
         pygame.sprite.Sprite.__init__(self, self.groups)
 
-        self.x = x * TILE_SIZE
-        self.y = y * TILE_SIZE
+        self.chase_player = chase_player
+        if not chase_player:
+            self.x = x * TILE_SIZE
+            self.y = y * TILE_SIZE
+        else:
+            self.x = x
+            self.y = y
+            
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 
@@ -41,26 +47,42 @@ class Enemy(pygame.sprite.Sprite):
         self.y_change = 0
 
     def movement(self):
-        if self.facing == "right":
-            self.x_change += ENEMY_SPEED
-            self.movement_loop += 1
-            if self.movement_loop >= self.max_travel:
-                self.facing = "left" 
-        if self.facing == "left":
-            self.x_change -= ENEMY_SPEED
-            self.movement_loop -= 1
-            if self.movement_loop <= 0:
+        if self.chase_player:
+            player = self.game.player
+
+            if player.rect.x > self.rect.x:
+                self.x_change = ENEMY_SPEED
                 self.facing = "right"
-        if self.facing == "down":
-            self.y_change += ENEMY_SPEED
-            self.movement_loop += 1
-            if self.movement_loop >= self.max_travel:
-                self.facing = "up"
-        if self.facing == "up":
-            self.y_change -= ENEMY_SPEED
-            self.movement_loop -= 1
-            if self.movement_loop <= 0:
+            elif player.rect.x < self.rect.x:
+                self.x_change = -ENEMY_SPEED
+                self.facing = "left"
+            if player.rect.y > self.rect.y:
+                self.y_change = ENEMY_SPEED
                 self.facing = "down"
+            elif player.rect.y < self.rect.y:
+                self.y_change = -ENEMY_SPEED
+                self.facing = "up"
+        else:
+            if self.facing == "right":
+                self.x_change += ENEMY_SPEED
+                self.movement_loop += 1
+                if self.movement_loop >= self.max_travel:
+                    self.facing = "left" 
+            if self.facing == "left":
+                self.x_change -= ENEMY_SPEED
+                self.movement_loop -= 1
+                if self.movement_loop <= 0:
+                    self.facing = "right"
+            if self.facing == "down":
+                self.y_change += ENEMY_SPEED
+                self.movement_loop += 1
+                if self.movement_loop >= self.max_travel:
+                    self.facing = "up"
+            if self.facing == "up":
+                self.y_change -= ENEMY_SPEED
+                self.movement_loop -= 1
+                if self.movement_loop <= 0:
+                    self.facing = "down"
     
     def animate(self):
         left_animations = [
@@ -139,3 +161,5 @@ class Enemy(pygame.sprite.Sprite):
                     self.rect.bottom = wall.rect.top
                 if y_change < 0:
                     self.rect.top = wall.rect.bottom
+    
+    

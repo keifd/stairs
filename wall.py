@@ -28,13 +28,29 @@ class Wall(pygame.sprite.Sprite):
             self.image = self.game.character_spritesheet.get_sprite(wall[0], wall[1], self.width, self.height)
         elif self.game.world == 2:
             wall_1 = [12*32, 17*32]
-            wall_2 = [12*32, 17*32]
-            wall_3 = [12*32, 17*32]
-            wall_4 = [12*32, 17*32]
-            wall_5 = [12*32, 17*32]
-            wall_6 = [12*32, 17*32]
-            wall_7 = [12*32, 17*32]
-            wall_list = [wall_1, wall_2, wall_3, wall_4, wall_5, wall_6, wall_7]
+            wall_2 = [13*32, 17*32]
+            wall_3 = [14*32, 17*32]
+            wall_4 = [15*32, 17*32]
+            wall_5 = [16*32, 17*32]
+            wall_6 = [17*32, 17*32]
+            wall_7 = [18*32, 17*32]
+            wall_8 = [19*32, 17*32]
+            wall_9 = [20*32, 17*32]
+            wall_10 = [21*32, 17*32]
+            wall_list = [wall_1, wall_2, wall_3, wall_4, wall_5, wall_6, wall_7, wall_8, wall_9, wall_10]
+            wall = random.choice(wall_list)
+
+            self.image = self.game.character_spritesheet.get_sprite(wall[0], wall[1], self.width, self.height) 
+        elif self.game.world == 3:
+            wall_1 = [0*32, 14*32]
+            wall_2 = [1*32, 14*32]
+            wall_3 = [2*32, 14*32]
+            wall_4 = [3*32, 14*32]
+            wall_5 = [4*32, 14*32]
+            wall_6 = [5*32, 14*32]
+            wall_7 = [6*32, 14*32]
+            wall_8 = [7*32, 14*32]
+            wall_list = [wall_1, wall_2, wall_3, wall_4, wall_5, wall_6, wall_7, wall_8]
             wall = random.choice(wall_list)
 
             self.image = self.game.character_spritesheet.get_sprite(wall[0], wall[1], self.width, self.height)

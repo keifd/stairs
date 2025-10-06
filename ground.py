@@ -17,6 +17,8 @@ class Ground(pygame.sprite.Sprite):
             self.image = self.game.character_spritesheet.get_sprite(0*32, 15*32, self.width, self.height)
         elif self.game.world == 2:
             self.image = self.game.character_spritesheet.get_sprite(7*32, 15*32, self.width, self.height)
+        elif self.game.world == 3:
+            self.image = self.game.character_spritesheet.get_sprite(14*32, 13*32, self.width, self.height)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x

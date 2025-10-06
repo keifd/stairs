@@ -2,6 +2,7 @@ import pygame
 from config import *
 from projectile import *
 from portal import *
+from enemy import *
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -21,7 +22,12 @@ class Boss(pygame.sprite.Sprite):
         self.y_change = 0
         self.animation_loop = 0
 
-        self.image = self.game.character_spritesheet.get_sprite(0*32, 2*32, TILE_SIZE, TILE_SIZE)
+        if self.game.world == 1:
+            self.image = self.game.character_spritesheet.get_sprite(0*32, 2*32, TILE_SIZE, TILE_SIZE)
+        elif self.game.world == 2:
+            self.image = self.game.character_spritesheet.get_sprite(4*32, 3*32, TILE_SIZE, TILE_SIZE)
+        elif self.game.world == 3:
+            self.image = self.game.character_spritesheet.get_sprite(14*32, 2*32, TILE_SIZE, TILE_SIZE)
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -35,21 +41,34 @@ class Boss(pygame.sprite.Sprite):
         self.bar_x = (self.game.screen.get_width() - self.bar_width) // 2  # center horizontally
         self.bar_y = self.game.screen.get_height() - self.bar_height - 20  # 20 px from bottom
 
-        self.time = 0
-    def update(self):
-        self.movement()
-        self.animate()
+        self.projectile_time = 0
+        self.spawn_time = 0
+        self.last_area_attack_time = 0
+        self.area_attack_flag = False
 
-        self.shoot_projectiles()
+    def update(self):
+        if self.game.world == 1:
+            self.movement()
+            self.animate()
+            self.shoot_projectile()
+        elif self.game.world == 2:
+            self.animate()
+            self.spawn_enemy()
+        elif self.game.world == 3:
+            self.movement()
+            self.animate()
+            self.area_attack()
         
+
+
+        # Apply movement and collisions for all worlds
         self.rect.x += self.x_change
         self.collide(self.x_change, 0)
         self.rect.y += self.y_change
         self.collide(0, self.y_change)
-
-
         self.x_change = 0
         self.y_change = 0
+
 
     def movement(self):
         player = self.game.player
@@ -85,11 +104,14 @@ class Boss(pygame.sprite.Sprite):
     def take_damadge(self, amount):
         self.health -= amount
         if self.health <= 0:
-            self.health = 0
-            self.kill()
-            self.game.currency += 100
-            self.game.boss_stage = False
-            Portal(self.game, self.rect.centerx, self.rect.centery)
+            if self.game.world == 3:
+                self.game.end_screen()
+            else:
+                self.health = 0
+                self.kill()
+                self.game.currency += 100
+                self.game.boss_stage = False
+                Portal(self.game, self.rect.centerx, self.rect.centery)
     
     def draw(self, surface):
 
@@ -104,11 +126,42 @@ class Boss(pygame.sprite.Sprite):
         # Optional: white border
         pygame.draw.rect(surface, WHITE, (self.bar_x, self.bar_y, self.bar_width, self.bar_height), 2)
 
-    def shoot_projectiles(self):
+    def shoot_projectile(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.time > 2000:
-            self.time = current_time
+        if current_time - self.projectile_time > 2000:
+            self.projectile_time = current_time
             # spawns 3 projectiles at a time
             offsets = [-15, 0, 15]  # horizontal spread
             for offset in offsets:
                 Projectile(self.game, self.rect.centerx + offset, self.rect.centery)
+    
+    def spawn_enemy(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.spawn_time > 2000:
+            self.spawn_time = current_time
+            # spawns 2 enemies at a time
+            offsets = [-15, 15]  # horizontal spread
+            for offset in offsets:
+                Enemy(self.game, self.rect.centerx + offset, self.rect.centery, True)
+    
+    def area_attack(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_area_attack_time > 5000:
+            self.last_area_attack_time = current_time
+            self.area_attack_flag = True
+
+            # Damage player if inside radius
+            player = self.game.player
+            dx = player.rect.centerx - self.rect.centerx
+            dy = player.rect.centery - self.rect.centery
+            distance = (dx**2 + dy**2)**0.5
+
+            if distance <= 100:
+                self.game.health -= 30
+                if self.game.health <= 0:
+                    self.game.playing = False
+                    self.game.game_over()
+                    
+
+                # optional: play a sound or animation
+

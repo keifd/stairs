@@ -19,12 +19,19 @@ class Game:
         self.player_spritesheet = Spritesheet("img/player_32x32.png")
         self.skeleton_spritesheet = Spritesheet("img/skeleton_32x32.png")
 
-        self.intro_background = BLUE
-        self.end_background = RED
-        self.pause_background = BLACK
+        self.intro_background = SLATE_GREY
+        self.lose_background = SLATE_GREY
+        self.pause_background = SLATE_GREY
+        self.win_background = SLATE_GREY
 
         self.worlds = ['world_1', 'world_2', 'world_3']
-        self.stages = ['stage_1', 'stage_2', 'stage_3', 'stage_4', 'boss_stage']
+
+        self.world_stages = {
+            'world_1': ['stage_1', 'stage_2', 'stage_3', 'stage_4', 'boss_stage'],
+            'world_2': ['stage_1', 'stage_2', 'stage_3', 'stage_4', 'stage_5', 'boss_stage'],
+            'world_3': ['stage_1', 'stage_2', 'stage_3', 'boss_stage']
+        }
+
 
     
 
@@ -130,14 +137,14 @@ class Game:
 
         if direction == "down":
             self.current_stage_index += 1
-            stage = self.stages[self.current_stage_index]
             world = self.worlds[self.world - 1]
+            stage = self.world_stages[world][self.current_stage_index]
             self.createTilemap(maps.worlds[world][stage])
             self.spawn_beside = spawn
         elif direction == "up":
             self.current_stage_index -= 1
-            stage = self.stages[self.current_stage_index]
             world = self.worlds[self.world - 1]
+            stage = self.world_stages[world][self.current_stage_index]
             self.createTilemap(maps.worlds[world][stage])
             self.player.rect.topleft = self.spawn_beside
 
@@ -146,8 +153,8 @@ class Game:
 
         self.current_stage_index = 0
         self.world += 1
-        stage = self.stages[self.current_stage_index]
         world = self.worlds[self.world - 1]
+        stage = self.world_stages[world][self.current_stage_index]
         self.createTilemap(maps.worlds[world][stage])
 
 
@@ -156,8 +163,8 @@ class Game:
 
         # goes to the last stage in the stages list
         self.current_stage_index = -1
-        stage = self.stages[self.current_stage_index]
         world = self.worlds[self.world - 1]
+        stage = self.world_stages[world][self.current_stage_index]
         self.createTilemap(maps.worlds[world][stage])
         self.boss_stage = True
         
@@ -208,6 +215,20 @@ class Game:
         if self.boss_stage:
             self.boss.draw(self.screen)
 
+            if self.boss.area_attack_flag:
+                pygame.draw.circle(
+                self.screen,                  # surface
+                BLUE,                          # color
+                (
+                    self.boss.rect.centerx - self.camera_x,
+                    self.boss.rect.centery - self.camera_y
+                ),         # position
+                100,  # radius
+                10                              # thickness
+            )
+            self.boss.area_attack_flag = False
+
+
 
         self.clock.tick(FPS)
         pygame.display.update()
@@ -242,7 +263,7 @@ class Game:
                         self.playing = False
                 
                           
-            self.screen.fill(self.end_background)
+            self.screen.fill(self.lose_background)
             self.screen.blit(title, title_rect)
             self.screen.blit(restart_button.image, restart_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
@@ -304,6 +325,36 @@ class Game:
             self.screen.fill(self.pause_background)
             self.screen.blit(title, title_rect)
             self.screen.blit(continue_button.image, continue_button.rect)
+            self.screen.blit(exit_button.image, exit_button.rect)
+            self.clock.tick(FPS)
+            pygame.display.update()
+
+    def end_screen(self):
+        end = True
+
+        title = self.font.render('You Won!', True, BLACK)
+        title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
+        restart_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 +100, 100,50, WHITE, BLACK, 'Restart', 32)
+        exit_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 + 170, 100, 50, WHITE, BLACK, 'Exit', 32)
+
+        while end:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    end = False
+                    self.running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if restart_button.rect.collidepoint(event.pos):
+                        end = False
+                        self.playing = False
+                    if exit_button.rect.collidepoint(event.pos):
+                        end = False
+                        self.running = False
+                        self.playing = False
+                
+                          
+            self.screen.fill(self.win_background)
+            self.screen.blit(title, title_rect)
+            self.screen.blit(restart_button.image, restart_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
             self.clock.tick(FPS)
             pygame.display.update()
