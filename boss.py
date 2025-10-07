@@ -18,16 +18,18 @@ class Boss(pygame.sprite.Sprite):
         self.width = TILE_SIZE * self.scale_factor
         self.height = TILE_SIZE * self.scale_factor
 
+        self.facing = "down"
         self.x_change = 0
         self.y_change = 0
         self.animation_loop = 0
 
         if self.game.world == 1:
-            self.image = self.game.character_spritesheet.get_sprite(0*32, 2*32, TILE_SIZE, TILE_SIZE)
+            self.image = self.game.boss1_spritesheet.get_sprite(0*32, 10*32, TILE_SIZE, TILE_SIZE)
         elif self.game.world == 2:
-            self.image = self.game.character_spritesheet.get_sprite(4*32, 3*32, TILE_SIZE, TILE_SIZE)
+            self.image = self.game.boss2_spritesheet.get_sprite(0*32, 10*32, TILE_SIZE, TILE_SIZE)
         elif self.game.world == 3:
-            self.image = self.game.character_spritesheet.get_sprite(14*32, 2*32, TILE_SIZE, TILE_SIZE)
+            self.image = self.game.boss3_spritesheet.get_sprite(0*32, 10*32, TILE_SIZE, TILE_SIZE)
+            
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -87,7 +89,171 @@ class Boss(pygame.sprite.Sprite):
             self.facing = "up"
     
     def animate(self):
-        pass
+        if self.game.world == 1:
+            left_animations = [
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(1*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(2*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(3*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(4*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(5*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(6*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(7*32, 9*32, 32, 32), (self.width, self.height))
+            ]
+            right_animations = [
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(1*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(2*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(3*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(4*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(5*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(6*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(7*32, 11*32, 32, 32), (self.width, self.height))
+            ]
+            up_animations = [
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(1*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(2*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(3*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(4*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(5*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(6*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(7*32, 8*32, 32, 32), (self.width, self.height))
+            ]
+            down_animations = [
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(1*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(2*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(3*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(4*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(5*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(6*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(7*32, 10*32, 32, 32), (self.width, self.height))
+            ]
+
+            if self.facing == "left":
+                if self.y_change == 0 and self.x_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(0*32, 9*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = left_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(left_animations) - 1:
+                        self.animation_loop = 0
+
+            if self.facing == "right":
+                if self.y_change == 0 and self.x_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(0*32, 11*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = right_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(right_animations) - 1:
+                        self.animation_loop = 0
+
+            if self.facing == "up":
+                if self.x_change == 0 and self.y_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(0*32, 8*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = up_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(up_animations) - 1:
+                        self.animation_loop = 0
+
+            if self.facing == "down":
+                if self.x_change == 0 and self.y_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss1_spritesheet.get_sprite(0*32, 10*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = down_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(down_animations) - 1:
+                        self.animation_loop = 0
+        elif self.game.world == 2:
+            down_animations = [
+                pygame.transform.scale(self.game.boss2_spritesheet.get_sprite(1*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss2_spritesheet.get_sprite(2*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss2_spritesheet.get_sprite(3*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss2_spritesheet.get_sprite(4*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss2_spritesheet.get_sprite(5*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss2_spritesheet.get_sprite(6*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss2_spritesheet.get_sprite(7*32, 10*32, 32, 32), (self.width, self.height))
+
+            ]
+            self.image = down_animations[math.floor(self.animation_loop)]
+            self.animation_loop += 0.1
+            if self.animation_loop > len(down_animations) - 1:
+                self.animation_loop = 0
+        elif self.game.world == 3:
+            left_animations = [
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(1*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(2*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(3*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(4*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(5*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(6*32, 9*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(7*32, 9*32, 32, 32), (self.width, self.height))
+            ]
+            right_animations = [
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(1*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(2*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(3*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(4*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(5*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(6*32, 11*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(7*32, 11*32, 32, 32), (self.width, self.height))
+            ]
+            up_animations = [
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(1*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(2*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(3*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(4*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(5*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(6*32, 8*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(7*32, 8*32, 32, 32), (self.width, self.height))
+            ]
+            down_animations = [
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(1*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(2*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(3*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(4*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(5*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(6*32, 10*32, 32, 32), (self.width, self.height)),
+                pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(7*32, 10*32, 32, 32), (self.width, self.height))
+            ]
+
+            if self.facing == "left":
+                if self.y_change == 0 and self.x_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(0*32, 9*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = left_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(left_animations) - 1:
+                        self.animation_loop = 0
+
+            if self.facing == "right":
+                if self.y_change == 0 and self.x_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(0*32, 11*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = right_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(right_animations) - 1:
+                        self.animation_loop = 0
+
+            if self.facing == "up":
+                if self.x_change == 0 and self.y_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(0*32, 8*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = up_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(up_animations) - 1:
+                        self.animation_loop = 0
+
+            if self.facing == "down":
+                if self.x_change == 0 and self.y_change == 0:
+                    self.image = pygame.transform.scale(self.game.boss3_spritesheet.get_sprite(0*32, 10*32, 32, 32), (self.width, self.height))
+                else:
+                    self.image = down_animations[math.floor(self.animation_loop)]
+                    self.animation_loop += 0.1
+                    if self.animation_loop > len(down_animations) - 1:
+                        self.animation_loop = 0
+            
+
+
+        
 
     def collide(self, x_change, y_change):
         for wall in self.game.walls:

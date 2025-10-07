@@ -19,6 +19,11 @@ class Game:
         self.player_spritesheet = Spritesheet("img/player_32x32.png")
         self.skeleton_spritesheet = Spritesheet("img/skeleton_32x32.png")
 
+    
+        self.boss1_spritesheet = Spritesheet("img/boss1_32x32.png")
+        self.boss2_spritesheet = Spritesheet("img/boss2_32x32.png")
+        self.boss3_spritesheet = Spritesheet("img/boss3_32x32.png")
+
         self.intro_background = SLATE_GREY
         self.lose_background = SLATE_GREY
         self.pause_background = SLATE_GREY
@@ -222,8 +227,8 @@ class Game:
                 (
                     self.boss.rect.centerx - self.camera_x,
                     self.boss.rect.centery - self.camera_y
-                ),         # position
-                100,  # radius
+                ),                           # position
+                100,                             # radius
                 10                              # thickness
             )
             self.boss.area_attack_flag = False
