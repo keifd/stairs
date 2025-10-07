@@ -29,6 +29,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
+
+        self.attack = False
         
     
     def animate(self):
@@ -100,6 +102,20 @@ class Player(pygame.sprite.Sprite):
             self.game.player_spritesheet.get_sprite(5*32, 40*32, self.width, self.height),
             self.game.player_spritesheet.get_sprite(6*32, 40*32, self.width, self.height)
         ]
+
+        # player is attacking
+        if self.attack:
+            if self.facing == "left":
+                self.image = self.game.player_spritesheet.get_sprite(12*32, 17*32, self.width, self.height)
+            elif self.facing == "right":
+                self.image = self.game.player_spritesheet.get_sprite(12*32, 19*32, self.width, self.height)
+            elif self.facing == "up":
+                self.image = self.game.player_spritesheet.get_sprite(12*32, 16*32, self.width, self.height)
+            elif self.facing == "down":
+                self.image = self.game.player_spritesheet.get_sprite(12*32, 18*32, self.width, self.height)
+            return
+        
+        # player is sprinting
         if self.sprinting:
             if self.facing == "left":
                 if self.y_change == 0 and self.x_change ==0:
@@ -133,39 +149,41 @@ class Player(pygame.sprite.Sprite):
                     self.animation_loop += 0.1
                     if self.animation_loop > len(sprint_down_animations) - 1:
                         self.animation_loop = 0
-        else:
-            if self.facing == "left":
-                if self.y_change == 0 and self.x_change ==0:
-                    self.image =  self.game.player_spritesheet.get_sprite(0*32, 9*32, self.width, self.height)
-                else:
-                    self.image = walk_left_animations[math.floor(self.animation_loop)]
-                    self.animation_loop += 0.1
-                    if self.animation_loop > len(walk_left_animations) - 1:
-                        self.animation_loop = 0
-            if self.facing == "right":
-                if self.y_change == 0 and self.x_change == 0:
-                    self.image =  self.game.player_spritesheet.get_sprite(0*32, 11*32, self.width, self.height)
-                else:
-                    self.image = walk_right_animations[math.floor(self.animation_loop)]
-                    self.animation_loop += 0.1
-                    if self.animation_loop > len(walk_right_animations) - 1:
-                        self.animation_loop = 0
-            if self.facing == "up":
-                if self.x_change == 0 and self.y_change == 0:
-                    self.image =  self.game.player_spritesheet.get_sprite(0*32, 8*32, self.width, self.height)
-                else:
-                    self.image = walk_up_animations[math.floor(self.animation_loop)]
-                    self.animation_loop += 0.1
-                    if self.animation_loop > len(walk_up_animations) - 1:
-                        self.animation_loop = 0
-            if self.facing == "down":
-                if self.x_change == 0 and self.y_change == 0:
-                    self.image =  self.game.player_spritesheet.get_sprite(0*32, 10*32, self.width, self.height)
-                else:
-                    self.image = walk_down_animations[math.floor(self.animation_loop)]
-                    self.animation_loop += 0.1
-                    if self.animation_loop > len(walk_down_animations) - 1:
-                        self.animation_loop = 0
+            return
+        
+        # player is walking
+        if self.facing == "left":
+            if self.y_change == 0 and self.x_change ==0:
+                self.image =  self.game.player_spritesheet.get_sprite(0*32, 9*32, self.width, self.height)
+            else:
+                self.image = walk_left_animations[math.floor(self.animation_loop)]
+                self.animation_loop += 0.1
+                if self.animation_loop > len(walk_left_animations) - 1:
+                    self.animation_loop = 0
+        if self.facing == "right":
+            if self.y_change == 0 and self.x_change == 0:
+                self.image =  self.game.player_spritesheet.get_sprite(0*32, 11*32, self.width, self.height)
+            else:
+                self.image = walk_right_animations[math.floor(self.animation_loop)]
+                self.animation_loop += 0.1
+                if self.animation_loop > len(walk_right_animations) - 1:
+                    self.animation_loop = 0
+        if self.facing == "up":
+            if self.x_change == 0 and self.y_change == 0:
+                self.image =  self.game.player_spritesheet.get_sprite(0*32, 8*32, self.width, self.height)
+            else:
+                self.image = walk_up_animations[math.floor(self.animation_loop)]
+                self.animation_loop += 0.1
+                if self.animation_loop > len(walk_up_animations) - 1:
+                    self.animation_loop = 0
+        if self.facing == "down":
+            if self.x_change == 0 and self.y_change == 0:
+                self.image =  self.game.player_spritesheet.get_sprite(0*32, 10*32, self.width, self.height)
+            else:
+                self.image = walk_down_animations[math.floor(self.animation_loop)]
+                self.animation_loop += 0.1
+                if self.animation_loop > len(walk_down_animations) - 1:
+                    self.animation_loop = 0
     
             
         
@@ -191,22 +209,24 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         speed = PLAYER_SPEED
         self.sprinting = keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]
-    
-        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
-            speed = PLAYER_SPEED * 1.5
 
-        if keys[pygame.K_LEFT]:
-            self.x_change -= speed
-            self.facing = 'left'
-        elif keys[pygame.K_RIGHT]:
-            self.x_change += speed
-            self.facing = 'right'
-        elif keys[pygame.K_UP]:
-            self.y_change -= speed
-            self.facing = 'up'
-        elif keys[pygame.K_DOWN]:
-            self.y_change += speed
-            self.facing = 'down'
+        # disable player attacking and moving at the same time
+        if not self.attack:
+            if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                speed = PLAYER_SPEED * 1.5
+
+            if keys[pygame.K_a]:
+                self.x_change -= speed
+                self.facing = 'left'
+            elif keys[pygame.K_d]:
+                self.x_change += speed
+                self.facing = 'right'
+            elif keys[pygame.K_w]:
+                self.y_change -= speed
+                self.facing = 'up'
+            elif keys[pygame.K_s]:
+                self.y_change += speed
+                self.facing = 'down'
 
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)

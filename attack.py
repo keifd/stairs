@@ -20,9 +20,10 @@ class Attack(pygame.sprite.Sprite):
 
         self.facing = self.game.player.facing
 
-        self.image = self.game.player_spritesheet.get_sprite(0*32, 17*32, self.width, self.height)
-        
+        self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        self.image.fill((0, 0, 0, 0))  # fully transparent
         self.rect = self.image.get_rect()
+        
         self.rect.x = self.x
         self.rect.y = self.y
 
@@ -45,76 +46,9 @@ class Attack(pygame.sprite.Sprite):
                 break  
     
     def animate(self):
-        left_animations = [
-            self.game.player_spritesheet.get_sprite(1*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(2*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(3*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(4*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(5*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(6*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(7*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(8*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(9*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(10*32, 17*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(11*32, 17*32, self.width, self.height),
-            
-        ]
-        right_animations = [
-            self.game.player_spritesheet.get_sprite(1*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(2*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(3*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(4*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(5*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(6*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(7*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(8*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(9*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(10*32, 19*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(11*32, 19*32, self.width, self.height)
-        ]
-        up_animations = [
-            self.game.player_spritesheet.get_sprite(1*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(2*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(3*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(4*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(5*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(6*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(7*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(8*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(9*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(10*32, 16*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(11*32, 16*32, self.width, self.height)
-        ]
-        down_animations = [
-            self.game.player_spritesheet.get_sprite(1*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(2*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(3*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(4*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(5*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(6*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(7*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(8*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(9*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(10*32, 18*32, self.width, self.height),
-            self.game.player_spritesheet.get_sprite(11*32, 18*32, self.width, self.height)
-        ]
-        if self.facing == "left":
-            self.image = left_animations[math.floor(self.animation_loop)]
-            self.animation_loop += 0.5
-            if self.animation_loop >= len(left_animations):
-                self.kill()
-        if self.facing == "right":
-            self.image = right_animations[math.floor(self.animation_loop)]
-            self.animation_loop += 0.5
-            if self.animation_loop >= len(right_animations):
-                self.kill()
-        if self.facing == "up":
-            self.image = up_animations[math.floor(self.animation_loop)]
-            self.animation_loop += 0.5
-            if self.animation_loop >= len(up_animations):
-                self.kill()
-        if self.facing == "down":
-            self.image = down_animations[math.floor(self.animation_loop)]
-            self.animation_loop += 0.5
-            if self.animation_loop >= len(down_animations):
-                self.kill()
+        # increment the animation loop
+        self.animation_loop += 0.5
+        # destroy the sprite after some duration (example: 12 frames)
+        if self.animation_loop >= 5:
+            self.game.player.attack = False
+            self.kill()

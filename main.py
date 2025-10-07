@@ -192,12 +192,16 @@ class Game:
                 if event.key == pygame.K_SPACE:
                     if self.player.facing == "up":
                         Attack(self, self.player.rect.x, self.player.rect.y - TILE_SIZE)
+                        self.player.attack = True
                     if self.player.facing == "down":
                         Attack(self, self.player.rect.x, self.player.rect.y + TILE_SIZE)
+                        self.player.attack = True
                     if self.player.facing == "left":
                         Attack(self, self.player.rect.x - TILE_SIZE, self.player.rect.y)
+                        self.player.attack = True
                     if self.player.facing == "right":
                         Attack(self, self.player.rect.x + TILE_SIZE, self.player.rect.y)
+                        self.player.attack = True
 
     def update(self):
         self.all_sprites.update()
