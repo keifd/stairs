@@ -1,7 +1,6 @@
 
 import pygame
 from config import *
-import math
 
 class Attack(pygame.sprite.Sprite):
     def __init__(self, game, x, y):

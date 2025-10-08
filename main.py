@@ -10,7 +10,7 @@ class Game:
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.caption = pygame.display.set_caption("Dungeon Fighter")
         self.clock = pygame.time.Clock()
-        self.font = pygame.font.Font('VT323-Regular.ttf', 32)
+        self.font = pygame.font.Font('font/VT323-Regular.ttf', 32)
 
         # if the player hasn't died
         self.running = True
@@ -121,6 +121,13 @@ class Game:
         self.current_stage_index = 0
 
         self.boss_stage = False
+
+        pygame.mixer.init()
+        pygame.mixer.music.load('audio/03 Cave Dungeon LOOP.wav')
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
+
+        
     
     def clear_sprites(self):
         self.all_sprites.empty()
@@ -161,6 +168,19 @@ class Game:
         world = self.worlds[self.world - 1]
         stage = self.world_stages[world][self.current_stage_index]
         self.createTilemap(maps.worlds[world][stage])
+        pygame.mixer.music.stop()
+        if self.world == 1:
+            pygame.mixer.music.load('audio/03 Cave Dungeon LOOP.wav')
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-1)
+        elif self.world == 2:
+            pygame.mixer.music.load('audio/09 Jungle Dungeon LOOP.wav')
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-1)
+        elif self.world == 3:
+            pygame.mixer.music.load('audio/11 Lava Dungeon LOOP.wav')
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-1)
 
 
     def change_boss(self):
@@ -173,6 +193,10 @@ class Game:
         self.createTilemap(maps.worlds[world][stage])
         self.boss_stage = True
         
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load('audio/12 Boss Theme Loop.wav')
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
 
 
 

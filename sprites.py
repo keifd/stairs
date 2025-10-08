@@ -47,7 +47,7 @@ class Void(pygame.sprite.Sprite):
 
 class Button:
     def __init__(self, x, y, width, height, fg, bg, content, fontsize):
-        self.font = pygame.font.Font('VT323-Regular.ttf', fontsize)
+        self.font = pygame.font.Font('font/VT323-Regular.ttf', fontsize)
 
         self.image = pygame.Surface((width, height,))
         self.image.fill(bg)
