@@ -8,7 +8,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-        self.caption = pygame.display.set_caption("Dungeon Fighter")
+        self.caption = pygame.display.set_caption("Stairs")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font('font/VT323-Regular.ttf', 32)
 
@@ -24,11 +24,8 @@ class Game:
         self.boss2_spritesheet = Spritesheet("img/boss2_32x32.png")
         self.boss3_spritesheet = Spritesheet("img/boss3_32x32.png")
 
-        self.intro_background = SLATE_GREY
-        self.lose_background = SLATE_GREY
-        self.pause_background = SLATE_GREY
-        self.win_background = SLATE_GREY
-
+        self.background = pygame.transform.scale(pygame.image.load("img/background.png").convert(), (WINDOW_WIDTH, WINDOW_HEIGHT))
+       
         self.worlds = ['world_1', 'world_2', 'world_3']
 
         self.world_stages = {
@@ -274,6 +271,8 @@ class Game:
             self.draw()
 
     def game_over(self):
+        pygame.mixer.music.stop()
+
         end = True
 
         title = self.font.render('Game Over', True, BLACK)
@@ -296,7 +295,7 @@ class Game:
                         self.playing = False
                 
                           
-            self.screen.fill(self.lose_background)
+            self.screen.blit(self.background, (0, 0))
             self.screen.blit(title, title_rect)
             self.screen.blit(restart_button.image, restart_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
@@ -306,7 +305,7 @@ class Game:
     def intro_screen(self):
         intro = True
 
-        title = self.font.render('Dungeon Fighter', True, BLACK)
+        title = self.font.render('Stairs', True, WHEAT)
         title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
 
         play_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT// 4 + 100, 100, 50 , WHITE, BLACK, 'Play', 32)
@@ -324,7 +323,7 @@ class Game:
                         intro = False
                         self.running = False
 
-            self.screen.fill(self.intro_background)
+            self.screen.blit(self.background, (0, 0))
             self.screen.blit(title, title_rect)
             self.screen.blit(play_button.image, play_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
@@ -332,9 +331,11 @@ class Game:
             pygame.display.update()
     
     def pause_screen(self):
+        pygame.mixer.music.pause()
+
         pause = True
 
-        title = self.font.render('Dungeon Fighter', True, BLACK)
+        title = self.font.render('Paused', True, BLACK)
         title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
 
         continue_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT// 4 + 100, 100, 50 , WHITE, BLACK, 'Continue', 32)
@@ -349,13 +350,15 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if continue_button.rect.collidepoint(event.pos):
                         pause = False
+                        pygame.mixer.music.unpause()
+
                     if exit_button.rect.collidepoint(event.pos):
                         pause = False
                         self.running = False
                         self.playing = False
 
 
-            self.screen.fill(self.pause_background)
+            self.screen.blit(self.background, (0, 0))
             self.screen.blit(title, title_rect)
             self.screen.blit(continue_button.image, continue_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
@@ -363,6 +366,8 @@ class Game:
             pygame.display.update()
 
     def end_screen(self):
+        pygame.mixer.music.stop()
+
         end = True
 
         title = self.font.render('You Won!', True, BLACK)
@@ -385,7 +390,7 @@ class Game:
                         self.playing = False
                 
                           
-            self.screen.fill(self.win_background)
+            self.screen.blit(self.background, (0, 0))
             self.screen.blit(title, title_rect)
             self.screen.blit(restart_button.image, restart_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
