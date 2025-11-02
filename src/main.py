@@ -335,7 +335,7 @@ class Game:
 
         pause = True
 
-        title = self.font.render('Paused', True, BLACK)
+        title = self.font.render('Paused', True, WHEAT)
         title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
 
         continue_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT// 4 + 100, 100, 50 , WHITE, BLACK, 'Continue', 32)
@@ -362,6 +362,22 @@ class Game:
             self.screen.blit(title, title_rect)
             self.screen.blit(continue_button.image, continue_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
+
+            controls = [
+            "W - Move Up",
+            "A - Move Left",
+            "S - Move Down",
+            "D - Move Right",
+            "SPACE - Attack"
+            ]
+
+            y = WINDOW_HEIGHT // 4 + 260
+            for text in controls:
+                label = self.font.render(text, True, WHEAT)
+                label_rect = label.get_rect(center=(WINDOW_WIDTH // 2, y))
+                self.screen.blit(label, label_rect)
+                y += 30
+
             self.clock.tick(FPS)
             pygame.display.update()
 
@@ -370,7 +386,7 @@ class Game:
 
         end = True
 
-        title = self.font.render('You Won!', True, BLACK)
+        title = self.font.render('You Won!', True, WHEAT)
         title_rect = title.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT// 4))
         restart_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 +100, 100,50, WHITE, BLACK, 'Restart', 32)
         exit_button = Button(WINDOW_WIDTH//2 - 50, WINDOW_HEIGHT//4 + 170, 100, 50, WHITE, BLACK, 'Exit', 32)
@@ -394,12 +410,14 @@ class Game:
             self.screen.blit(title, title_rect)
             self.screen.blit(restart_button.image, restart_button.rect)
             self.screen.blit(exit_button.image, exit_button.rect)
+
+
             self.clock.tick(FPS)
             pygame.display.update()
 
 
 
-
+# to run the game
 if __name__ == "__main__":
     g = Game()
     g.intro_screen()
